@@ -17,6 +17,12 @@ function log_info() {
 [[ "$USER" == "root" ]] || fail "Please run as root with:
 sudo $0"
 
+log_info "Updating the OS"
+apt-get update -y || fail "Update failed"
+
+log_info "Installing core tools"
+apt-get install -y dnsutils curl miniupnp wpasupplicant || fail "Core tools install failed"
+
 log_info "Getting parameters for no-ip dynamic DNS (see http://no-ip.org)"
 
 echo "Please enter no-ip host:"
@@ -30,12 +36,6 @@ read NOIP_USER || fail "Aborted by user"
 echo "Please enter no-ip password:"
 read NOIP_PASSWORD || fail "Aborted by user"
 [[ -n "$NOIP_PASSWORD" ]] || fail "Password needed."
-
-log_info "Updating the OS"
-apt-get update || fail "Update failed"
-
-log_info "Installing core tools"
-apt-get install dnsutils curl miniupnp wpasupplicant || fail "Core tools install failed"
 
 log_info "Cloning autopilot repository."
 git clone git://github.com/ochafik/autopilot.git /root/autopilot
