@@ -86,7 +86,7 @@ noip_host=$NOIP_HOST
 $OLD_CONFIG"
 echo "$CONFIG" > /boot/config.txt
 
-OLD_CRONTAB=`crontab -l`
+OLD_CRONTAB=`crontab -l | grep -v '^$'`
 FILTERED_CRONTAB=`echo "$CRONTAB" | grep -v "/root/autopilot" | grep -v '^$'`
 CRONTAB="*/1 * * * * /root/autopilot/publicize.sh
 */1 * * * * /root/autopilot/autoconnect.sh
