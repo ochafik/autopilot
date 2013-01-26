@@ -86,9 +86,8 @@ noip_host=$NOIP_HOST
 $OLD_CONFIG"
 echo "$CONFIG" > /boot/config.txt
 
-log_info "Registering various cron jobs."
 OLD_CRONTAB=`crontab -l`
-FILTERED_CRONTAB=`echo "$CRONTAB" | grep -v "/root/autopilot"`
+FILTERED_CRONTAB=`echo "$CRONTAB" | grep -v "/root/autopilot" | grep -v '^$'`
 CRONTAB="*/1 * * * * /root/autopilot/publicize.sh
 */1 * * * * /root/autopilot/autoconnect.sh
 */1 * * * * sleep 30 && cd /root/autopilot && git pull
