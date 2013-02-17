@@ -24,7 +24,7 @@ fi
 
 log_info "Installing core tools"
 apt-get install -y dnsutils curl git miniupnpc vim || fail "Core tools install failed"
-apt-get install clean || fail "Failed to clean packages"
+apt-get clean || fail "Failed to clean packages"
 
 log_info "Getting parameters for no-ip dynamic DNS (see http://no-ip.org)"
 
