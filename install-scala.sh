@@ -1,10 +1,9 @@
+#!/bin/bash
 
-#Dev
+cd ~/bin
+wget http://www.scala-lang.org/downloads/distrib/files/scala-2.10.0.tgz
+tar -zxvf scala-2.10.0.tgz
 
-mkdir ~/bin ; cd ~/bin
-wget http://www.java.net/download/JavaFXarm/jdk-8-ea-b36e-linux-arm-hflt-29_nov_2012.tar.gz
-tar -zxvf jdk-*.tar.gz
+echo "export SCALA_HOME=~/bin/scala-2.10.0" >> ~/.profile
+echo 'export PATH=$SCALA_HOME/bin:$PATH' >> ~/.profile
 
-mkdir ~/src ; cd ~/src
-bzr co lp:pocl
-git clone git@github.com:ochafik/nativelibs4java.git
