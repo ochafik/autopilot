@@ -28,7 +28,7 @@ function set_config() {
     else
         values=""
     fi
-    echo $values > $CONFIG_FILE
+    echo "$values" > $CONFIG_FILE
     echo "$name=$value" >> $CONFIG_FILE
 }
 

@@ -1,17 +1,24 @@
 #!/bin/bash
 
 function fail() {
-    echo "`tput bold``tput setaf 1`#" >&2
+    if [[ -n "$TERM" ]]; then
+        echo "`tput bold``tput setaf 1`#" >&2
+    fi
     echo "#" >&2
     echo "# ERROR: $@" >&2
     echo "#" >&2
-    echo "#`tput sgr0`" >&2
+    if [[ -n "$TERM" ]]; then
+       echo "#`tput sgr0`" >&2
+    fi
     exit 1
 }
 
 function log_info() {
-    #echo "# $@" >&2
-    echo "`tput bold`$@`tput sgr0`" >&2
+    if [[ -n "$TERM" ]]; then
+        echo "`tput bold`$@`tput sgr0`" >&2
+    else
+        echo "$@" >&2
+    fi
 }
 
 function checkInstalled() {

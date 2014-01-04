@@ -11,7 +11,11 @@ sudo $0"
 fi
 
 function log_info() {
-    echo "`tput bold`$@`tput sgr0`" >&2
+    if [[ -n "$TERM" ]]; then
+        echo "`tput bold`$@`tput sgr0`" >&2
+    else
+        echo "$@" >&2
+    fi
 }
 
 function install_package() {
