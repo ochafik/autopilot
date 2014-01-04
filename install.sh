@@ -14,15 +14,26 @@ function log_info() {
     echo "`tput bold`$@`tput sgr0`" >&2
 }
 
-TODAY=`date +%Y%m%M`
-if [[ ! -f ~/.update.timestamp || `cat ~/.update.timestamp` != "$TODAY" ]]; then
+function install_package() {
+    local binary=$1
+    local name=${2:-$binary}
+    if ! which $1 > /dev/null ; then
+        log_info "Installing $name"
+        apt-get -y install $name
+    fi
+}
+
+TODAY=`date +%Y%m%d`
+if [[ ! -f ~/.update.timestamp || "`cat ~/.update.timestamp`" != "$TODAY" ]]; then
     log_info "Updating the package list"
     apt-get update -y
-    echo "$TODAY" > ~/.update.timestamp
+    echo -n "$TODAY" > ~/.update.timestamp
 fi
 
-log_info "Installing core tools"
-apt-get install -y dnsutils curl git miniupnpc vim
+install_package git
+install_package vim
+# log_info "Installing core tools"
+# apt-get install -y dnsutils curl git miniupnpc vim
 apt-get clean
 
 if [[ -d $AUTOPILOT_HOME ]]; then
@@ -39,7 +50,7 @@ source $AUTOPILOT_HOME/common.sh
 source $AUTOPILOT_HOME/install/install-wpa.sh
 source $AUTOPILOT_HOME/install/install-noip.sh
 
-read_config_var USER_EMAIL user_email
+read_config_var USER_EMAIL user_email "Please enter user email"
 [[ -n "$USER_EMAIL" ]] || fail "User email needed."
 
 log_info "You can edit $CONFIG_FILE from any OS to tweak these settings."

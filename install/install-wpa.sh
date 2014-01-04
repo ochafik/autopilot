@@ -1,5 +1,7 @@
 #!/bin/bash
 
+log_info "Configuring Wifi"
+
 read_config_var WIFI_SSID ${WIFI_DEV}_ssid "Please enter the Wifi name / SSID"
 read_config_var WIFI_PASSWORD ${WIFI_DEV}_password "Please enter the Wifi password"
 
