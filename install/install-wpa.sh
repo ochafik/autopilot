@@ -1,7 +1,7 @@
 #!/bin/bash
 
-read_config_var WIFI_SSID wifi_ssid "Please enter the Wifi name / SSID"
-read_config_var WIFI_PASSWORD wifi_password "Please enter the Wifi password"
+read_config_var WIFI_SSID ${WIFI_DEV}_ssid "Please enter the Wifi name / SSID"
+read_config_var WIFI_PASSWORD ${WIFI_DEV}_password "Please enter the Wifi password"
 
 readonly WPA_SUPPLICANT=/etc/wpa_supplicant/wpa_supplicant.conf
 readonly WPA_SUPPLICANT_BOOT=/boot/wpa_supplicant.conf

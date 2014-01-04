@@ -1,11 +1,6 @@
 #!/bin/bash
 
-readonly CONFIG_FILE=${CONFIG_FILE:-/boot/config.txt}
-
-# function get_config() {
-#     NAME="$1"
-#     cat /boot/config.txt 2>/dev/null | grep "^$NAME=" | head -n 1 | sed 's/^.*=//'
-# }
+CONFIG_FILE=${CONFIG_FILE:-/boot/config.txt}
 
 # Equivalent to `vcgencmd getconfig $NAME`, with default value.
 function get_config() {
@@ -28,7 +23,11 @@ function set_config() {
     local name="$1"
     local value="$2"
     
-    values=`cat $CONFIG_FILE 2>/dev/null | grep -v "^$name="`
+    if [[ -f $CONFIG_FILE ]]; then
+        values=`cat $CONFIG_FILE 2>/dev/null | grep -v "^$name="`
+    else
+        values=""
+    fi
     echo $values > $CONFIG_FILE
     echo "$name=$value" >> $CONFIG_FILE
 }
@@ -38,14 +37,17 @@ function read_config_var() {
     local property_name=$2
     local prompt=$3
     
-    local default_value=`get_config "$property_name"`
-    local value
+    local default_value=`get_config "$property_name" ""`
+    local value=""
     eval "$var_name=$default_value"
     if [[ -n "$TERM" ]]; then
         echo "$prompt [$default_value]:"
-        read value || fail "Aborted by user"
+        read value
         if [[ -n "$value" ]]; then
-            eval "$var_name=$value"
+            if [[ "$value" == '""' || "$value" == "''" ]]; then
+                value=""
+            fi
+            eval "$var_name=\"$value\""
             set_config "$property_name" "$value"
         fi
     fi

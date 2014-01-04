@@ -21,8 +21,33 @@ function checkInstalled() {
     which $cmd > /dev/null || fail "Command '$cmd' not found. Please install with something like \`sudo apt-get install $pack\`"
 }
 
-source `basedir $0`/common-config.sh
-source `basedir $0`/common-net.sh
+function trim() {
+    local var=$@
+    var="${var#"${var%%[![:space:]]*}"}"
+    var="${var%"${var##*[![:space:]]}"}"
+    echo -n "$var"
+}
+
+function once_a_day() {
+    local timestamp_file=~/.$1.timestamp
+    local day_last_updated
+    
+    if [[ -f $timestamp_file ]]; then
+        day_last_updated=`cat $timestamp_file`
+    else
+        day_last_updated=""
+    fi
+    local today=`date +%Y%m%M`
+    if [[ "$day_last_updated" == "$today" ]]; then
+        return 1
+    else
+        echo $today > $timestamp_file
+        return 0
+    fi
+}
+
+source `dirname $0`/common-config.sh
+source `dirname $0`/common-net.sh
 
 function checkRoot() {
     [[ "$USER" == "root" ]] || fail "Please run as root with:

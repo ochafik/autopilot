@@ -1,20 +1,14 @@
 #!/bin/bash
 
-function up() {
-    DEV=$1
-    [[ -e "/dev/$DEV" ]] && ifup $DEV
-}
+source `dirname $0`/common.sh
 
-function getConfig() {
-    NAME="$1"
-    cat /boot/config.txt 2>/dev/null | grep "^$NAME=" | head -n 1 | sed 's/^.*=//'
-}
+checkRoot
 
 #sudo ifup eth0
 
 DEV=wlan0
-WIFI_SSID=`getConfig ${DEV}_ssid`
-WIFI_PASSWORD=`getConfig ${DEV}_password`
+WIFI_SSID=`get_config ${DEV}_ssid`
+WIFI_PASSWORD=`get_config ${DEV}_password`
 
 echo "WIFI_SSID=$WIFI_SSID (${DEV}_ssid)"
 echo "WIFI_PASSWORD=$WIFI_PASSWORD (${DEV}_password)"

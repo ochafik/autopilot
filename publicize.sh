@@ -1,37 +1,10 @@
 #!/bin/bash
-
 # Run every minute with:
 # */1 * * * * /root/autopilot/publicize.sh
 
-function fail() {
-    echo "`tput bold``tput setaf 1`#" >&2
-    echo "#" >&2
-    echo "# ERROR: $@" >&2
-    echo "#" >&2
-    echo "#`tput sgr0`" >&2
-    exit 1
-}
+source `dirname $0`/common.sh
 
-function log_info() {
-    echo "`tput bold`$@`tput sgr0`" >&2
-}
-
-function checkInstalled() {
-    CMD=$1
-    PACK=$2
-    [[ -n "$CMD" && -n "$PACK" ]] || fail "No cmd or no package name(s) provided"
-    which $CMD > /dev/null || fail "Command '$CMD' not found. Please install with something like \`sudo apt-get install $PACK\`"
-}
-
-function getLocalIP() {
-    ETH=$1
-    [[ -n "$ETH" ]] || fail "No interface"
-    /sbin/ifconfig "$ETH" | grep "inet " | perl -p -e 's/^.*?inet (?:addr:)?(.*?) .*$/\1/'
-}
-
-function getExternalIP() {
-    ( upnpc -s | grep ExternalIPAddress | perl -p -e 's/[^=]+= //' ) || fail "Failed to get external IP address"
-}
+checkRoot
 
 function updateDynamicDNS() {
     NOIP_USER="$1"
@@ -46,7 +19,7 @@ function updateDynamicDNS() {
     
     CURRENT_NOIP_ADDRESS=`dig +short "$NOIP_HOST"`
     
-    if [[ "$NOIP_ADDRESS" == "$CURRENT_NOIP_ADDRESS" ]]; then
+    if once_a_day publicize && [[ "$NOIP_ADDRESS" == "$CURRENT_NOIP_ADDRESS" ]]; then
         log_info "Host $NOIP_HOST is already associated with IP $NOIP_ADDRESS"
     else
         log_info "Updating host $NOIP_HOST to IP $NOIP_ADDRESS"
@@ -54,11 +27,6 @@ function updateDynamicDNS() {
         
         ( echo "$RESPONSE" | grep "\(nochg\|good\) `echo "$NOIP_ADDRESS" | sed 's/\./\\\\./'`" > /dev/null ) || fail "Failed to update IP for host '$NOIP_HOST' with user '$NOIP_USER': $RESPONSE"
     fi
-}
-
-function isIP() {
-   IP="$1"
-   [[ "$LOCAL_IP" =~ [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+ ]] && [ "$LOCAL_IP" != "0.0.0.0" ]
 }
 
 log_info "Running as user $USER"
@@ -114,32 +82,14 @@ function openRouterPort() {
     fi
 }
 
-# Equivalent to `vcgencmd getconfig $NAME`, with default value.
-function getConfig() {
-    NAME="$1"
-    DEFAULT_VALUE="$2"
-    
-    VALUE=`cat /boot/config.txt 2>/dev/null | grep "^$NAME=" | head -n 1 | sed 's/^.*=//'`
-    
-    if [[ -z "$VALUE" ]]; then
-        if [[ -z "$DEFAULT_VALUE" ]]; then
-            fail "Failed to get config '$NAME' and no default value"
-        else
-            echo "$DEFAULT_VALUE"
-        fi
-    else
-        echo "$VALUE"
-    fi
-}
-
-EXTERNAL_SSH_PORT=${EXTERNAL_SSH_PORT:-`getConfig external_ssh_port 1022`}
+EXTERNAL_SSH_PORT=${EXTERNAL_SSH_PORT:-`get_config external_ssh_port 1022`}
 if [[ -z "$SKIP_UPNP" ]]; then 
     openRouterPort "SSH" "$LOCAL_IP" 22 $EXTERNAL_SSH_PORT TCP
 fi
 
-NOIP_USER=${NOIP_USER:-`getConfig noip_user`}
-NOIP_PASSWORD=${NOIP_PASSWORD:-`getConfig noip_password`}
-NOIP_HOST=${NOIP_HOST:-`getConfig noip_host`}
+NOIP_USER=${NOIP_USER:-`get_config noip_user`}
+NOIP_PASSWORD=${NOIP_PASSWORD:-`get_config noip_password`}
+NOIP_HOST=${NOIP_HOST:-`get_config noip_host`}
 if [[ -z "$SKIP_NOIP" ]]; then    
     updateDynamicDNS "$NOIP_USER" "$NOIP_PASSWORD" "$NOIP_HOST" "$EXTERNAL_IP"
 fi

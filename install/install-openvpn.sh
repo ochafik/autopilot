@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source `basedir $0`/common.sh
+source `dirname $0`/common.sh
 
 # http://www.youtube.com/watch?v=O7D7UkA3IKQ
 
