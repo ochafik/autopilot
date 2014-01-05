@@ -1,53 +1,52 @@
 #!/bin/bash
 
-log_info "Configuring SOCKS server"
+log_info "Configuring SOCKS proxy"
 
-read_config_var SOCKS_USER socks_user "Please enter the SOCKS user"
+readonly DEFAULT_SOCKS_USER=proxima
+
+read_config_var SOCKS_USER socks_user "Please enter the SOCKS user" "$DEFAULT_SOCKS_USER"
 read_config_var SOCKS_PASSWORD socks_password "Please enter the SOCKS password"
-read_config_var EXTERNAL_SOCKS_PORT external_socks_port "Please enter the external SOCKS port"
+read_config_var EXTERNAL_SOCKS_PORT external_socks_port "Please enter the external SOCKS port" 8080
+
+install_package /etc/init.d/danted dante-server
 
 if [[ -n "$SOCKS_USER" ]]; then
-    [[ -z "$SOCKS_PASSWORD" ]] || fail "SOCKS password is needed"
+    [[ -n "$SOCKS_PASSWORD" ]] || fail "SOCKS password is needed"
 
-    if ! grep "$SOCKS_USER" > /dev/null; then
+    if ! grep "$SOCKS_USER" /etc/passwd > /dev/null; then
+	log_info "Creating user $SOCKS_USER"
         useradd --system "$SOCKS_USER" -s /bin/false
-	echo "$SOCKS_PASSWORD" | passwd "$SOCKS_USER" --stdin
     fi
-fi
+    echo "$SOCKS_USER:$SOCKS_PASSWORD" | chpasswd
 
-echo "
+    echo "
 #logging
 logoutput: /var/log/sockd.log
-#debug: 1
 
-#server address specification
-internal: 192.0.2.1 port = 1080
-external: eth1
+internal: $NETWORK_DEVICE port=1080
+internal: 127.0.0.1 port = 1080
 
-#server identities (not needed on solaris)
+external: $NETWORK_DEVICE
+
 user.privileged: root
-user.notprivileged: socks
-#user.libwrap: libwrap
+user.notprivileged: pi 
+# user.libwrap: $SOCKS_USER
 
-#reverse dns lookup
-#srchost: nodnsmismatch
+clientmethod: pam
+method: pam
 
-#authentication methods
-method: username
-
-#block communication with www.example.org
-# block {
-#        from: 0.0.0.0/0 to: www.example.org
-#        command: bind connect udpassociate
-#        log: error # connect disconnect iooperation
-# }
+client pass {
+        from: 0.0.0.0/0 to: 0.0.0.0/0
+        log: connect error
+	pamservicename: pam_host
+}
 
 #generic pass statement - bind/outgoing traffic
 pass {  
         from: 0.0.0.0/0 to: 0.0.0.0/0
         command: bind connect udpassociate
         log: error # connect disconnect iooperation
-	method: username
+	method: pam
 }
 
 #generic pass statement for incoming connections/packets
@@ -56,4 +55,18 @@ pass {
         command: bindreply udpreply
         log: error # connect disconnect iooperation
 }
-" > /etc/sockd.conf
+" > /etc/danted.conf
+
+    # See http://www.raspberrypi.org/phpBB3/viewtopic.php?f=66&t=34115
+    readonly LIB_DIR=/lib/arm-linux-gnueabihf
+    readonly LIBC_SO=$LIB_DIR/libc.so
+    readonly LIBC_SO_6=$LIB_DIR/libc.so.6
+    if [[ ! -f $LIBC_SO ]]; then
+	ln -s $LIBC_SO_6 $LIBC_SO
+    fi
+
+    /etc/init.d/danted stop
+    /etc/init.d/danted start
+fi
+
+

@@ -9,7 +9,7 @@ function get_config() {
     local value=`cat $CONFIG_FILE 2>/dev/null | grep "^$name=" | head -n 1 | sed 's/^.*=//'`
     
     if [[ -z "$value" ]]; then
-        if [[ -z "$default_value" ]]; then
+        if [[ $# -eq 1 ]]; then
             fail "failed to get config '$name' and no default value"
         else
             echo "$default_value"

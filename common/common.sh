@@ -53,8 +53,8 @@ function once_a_day() {
     fi
 }
 
-source `dirname $0`/common-config.sh
-source `dirname $0`/common-net.sh
+source `dirname $0`/common/common-config.sh
+source `dirname $0`/common/common-net.sh
 
 function checkRoot() {
     [[ "$USER" == "root" ]] || fail "Please run as root with:

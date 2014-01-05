@@ -38,7 +38,7 @@ install_package git
 install_package vim
 # log_info "Installing core tools"
 # apt-get install -y dnsutils curl git miniupnpc vim
-apt-get clean
+# apt-get clean
 
 if [[ -d $AUTOPILOT_HOME ]]; then
     log_info "Updating autopilot repository."
@@ -49,14 +49,11 @@ else
     git clone git://github.com/ochafik/autopilot.git $AUTOPILOT_HOME
 fi
 
-source $AUTOPILOT_HOME/common.sh
+source $AUTOPILOT_HOME/common/common.sh
 
 source $AUTOPILOT_HOME/install/install-wpa.sh
 source $AUTOPILOT_HOME/install/install-noip.sh
-source $AUTOPILOT_HOME/install/install-socks.sh
-
-# read_config_var USER_EMAIL user_email "Please enter user email"
-# [[ -n "$USER_EMAIL" ]] || fail "User email needed."
+# source $AUTOPILOT_HOME/install/install-socks.sh
 
 log_info "You can edit $CONFIG_FILE from any OS to tweak these settings."
 

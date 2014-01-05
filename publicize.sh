@@ -2,7 +2,7 @@
 # Run every minute with:
 # */1 * * * * /root/autopilot/publicize.sh
 
-source `dirname $0`/common.sh
+source `dirname $0`/common/common.sh
 
 checkRoot
 

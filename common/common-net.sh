@@ -4,6 +4,12 @@ WIFI_DEV=wlan0
 #WIFI_SSID=`getConfig ${WIFI_DEV}_ssid`
 #WIFI_PASSWORD=`getConfig ${WIFI_DEV}_password`
 
+if ! ( ifconfig | grep $WIFI_DEV > /dev/null ); then
+    NETWORK_DEVICE=eth0
+else
+    NETWORK_DEVICE=$WIFI_DEV
+fi
+
 function up() {
     local DEV=$1
     [[ -e "/dev/$DEV" ]] && ifup $DEV
