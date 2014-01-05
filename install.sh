@@ -53,7 +53,7 @@ source $AUTOPILOT_HOME/common/common.sh
 
 source $AUTOPILOT_HOME/install/install-wpa.sh
 source $AUTOPILOT_HOME/install/install-noip.sh
-# source $AUTOPILOT_HOME/install/install-socks.sh
+source $AUTOPILOT_HOME/install/install-socks.sh
 
 log_info "You can edit $CONFIG_FILE from any OS to tweak these settings."
 

@@ -21,7 +21,7 @@ if [[ -n "$SOCKS_USER" ]]; then
 
     echo "
 #logging
-logoutput: /var/log/sockd.log
+#logoutput: /var/log/sockd.log
 
 internal: $NETWORK_DEVICE port=1080
 internal: 127.0.0.1 port = 1080
@@ -29,16 +29,15 @@ internal: 127.0.0.1 port = 1080
 external: $NETWORK_DEVICE
 
 user.privileged: root
-user.notprivileged: pi 
-# user.libwrap: $SOCKS_USER
+user.notprivileged: $SOCKS_USER
+user.libwrap: $SOCKS_USER
 
-clientmethod: pam
-method: pam
+#clientmethod: username
+method: username
 
 client pass {
-        from: 0.0.0.0/0 to: 0.0.0.0/0
-        log: connect error
-	pamservicename: pam_host
+        from: 0.0.0.0/0 port 1-65535 to: 0.0.0.0/0
+	log: error # connect disconnect
 }
 
 #generic pass statement - bind/outgoing traffic
@@ -46,14 +45,14 @@ pass {
         from: 0.0.0.0/0 to: 0.0.0.0/0
         command: bind connect udpassociate
         log: error # connect disconnect iooperation
-	method: pam
+	method: username
 }
 
 #generic pass statement for incoming connections/packets
 pass {
         from: 0.0.0.0/0 to: 0.0.0.0/0
         command: bindreply udpreply
-        log: error # connect disconnect iooperation
+        # log: error # connect disconnect iooperation
 }
 " > /etc/danted.conf
 
