@@ -36,12 +36,13 @@ function read_config_var() {
     local var_name=$1
     local property_name=$2
     local prompt=$3
-    
-    local default_value=`get_config "$property_name" ""`
+    local default_value=$4
+ 
+    local current_value=`get_config "$property_name" "$default_value"`
     local value=""
-    eval "$var_name=$default_value"
+    eval "$var_name=$current_value"
     if [[ -n "$TERM" ]]; then
-        echo "$prompt [$default_value]:"
+        echo "$prompt [$current_value]:"
         read value
         if [[ -n "$value" ]]; then
             if [[ "$value" == '""' || "$value" == "''" ]]; then

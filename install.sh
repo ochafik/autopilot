@@ -21,7 +21,7 @@ function log_info() {
 function install_package() {
     local binary=$1
     local name=${2:-$binary}
-    if ! which $1 > /dev/null ; then
+    if ! which $1 > /dev/null && [[ ! -f $1 ]] ; then
         log_info "Installing $name"
         apt-get -y install $name
     fi
@@ -53,9 +53,10 @@ source $AUTOPILOT_HOME/common.sh
 
 source $AUTOPILOT_HOME/install/install-wpa.sh
 source $AUTOPILOT_HOME/install/install-noip.sh
+source $AUTOPILOT_HOME/install/install-socks.sh
 
-read_config_var USER_EMAIL user_email "Please enter user email"
-[[ -n "$USER_EMAIL" ]] || fail "User email needed."
+# read_config_var USER_EMAIL user_email "Please enter user email"
+# [[ -n "$USER_EMAIL" ]] || fail "User email needed."
 
 log_info "You can edit $CONFIG_FILE from any OS to tweak these settings."
 

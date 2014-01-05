@@ -47,18 +47,18 @@ log_info "External IP: '$EXTERNAL_IP'"
 [[ -n "$EXTERNAL_IP" && -n "$LOCAL_IP" ]] || fail "Failed to get local and external IPs."
 
 function currentRouteForPort() {
-    PORT=$1
-    PROTOCOL=$2
+    local PORT=$1
+    local PROTOCOL=$2
     [[ -n "$PORT" && -n "$PROTOCOL" ]] || fail "Bad call to currentRouteForPort"
     echo "$UPNP_LIST" | grep -E "[0-9]+ $PROTOCOL +$PORT->.*" | sed 's/^.*->//' | sed 's/ .*$//'
 }
 
 function openRouterPort() {
-    NAME=$1
-    LOCAL_IP=$2
-    LOCAL_PORT=$3
-    EXTERNAL_PORT=$4
-    PROTOCOL=$5
+    local NAME=$1
+    local LOCAL_IP=$2
+    local LOCAL_PORT=$3
+    local EXTERNAL_PORT=$4
+    local PROTOCOL=$5
     
     [[ -n "$NAME" ]] || fail "Missing service name"
     [[ -n "$LOCAL_IP" ]] || fail "Missing local ip"
@@ -66,8 +66,8 @@ function openRouterPort() {
     [[ -n "$EXTERNAL_PORT" ]] || fail "Missing external port"
     [[ -n "$PROTOCOL" ]] || fail "Missing protocol"
     
-    CURRENT_ROUTE=`currentRouteForPort $EXTERNAL_PORT $PROTOCOL`
-    EXPECTED_ROUTE="$LOCAL_IP:$LOCAL_PORT"
+    local CURRENT_ROUTE=`currentRouteForPort $EXTERNAL_PORT $PROTOCOL`
+    local EXPECTED_ROUTE="$LOCAL_IP:$LOCAL_PORT"
     
     if [[ -n "$CURRENT_ROUTE" && "$CURRENT_ROUTE" != "$EXPECTED_ROUTE" ]]; then
         log_info "Removing previous route $PROTOCOL $EXTERNAL_PORT->$CURRENT_ROUTE"
@@ -83,16 +83,16 @@ function openRouterPort() {
 }
 
 EXTERNAL_SSH_PORT=${EXTERNAL_SSH_PORT:-`get_config external_ssh_port 1022`}
-if [[ -z "$SKIP_UPNP" ]]; then 
-    openRouterPort "SSH" "$LOCAL_IP" 22 $EXTERNAL_SSH_PORT TCP
-fi
+openRouterPort "SSH" "$LOCAL_IP" 22 $EXTERNAL_SSH_PORT TCP
+
+EXTERNAL_SOCKS_PORT=${EXTERNAL_VPN_PORT:-`get_config external_socks_port 8080`}
+openRouterPort "SOCKS" "$LOCAL_IP" 1080 $EXTERNAL_SOCKS_PORT TCP
 
 NOIP_USER=${NOIP_USER:-`get_config noip_user`}
 NOIP_PASSWORD=${NOIP_PASSWORD:-`get_config noip_password`}
 NOIP_HOST=${NOIP_HOST:-`get_config noip_host`}
-if [[ -z "$SKIP_NOIP" ]]; then    
-    updateDynamicDNS "$NOIP_USER" "$NOIP_PASSWORD" "$NOIP_HOST" "$EXTERNAL_IP"
-fi
+
+updateDynamicDNS "$NOIP_USER" "$NOIP_PASSWORD" "$NOIP_HOST" "$EXTERNAL_IP"
 
 log_info "You can now connect with:
 ssh -X pi@$NOIP_HOST -p $EXTERNAL_SSH_PORT"

@@ -5,6 +5,8 @@ log_info "Configuring Wifi"
 read_config_var WIFI_SSID ${WIFI_DEV}_ssid "Please enter the Wifi name / SSID"
 read_config_var WIFI_PASSWORD ${WIFI_DEV}_password "Please enter the Wifi password"
 
+install_package wpa_supplicant wpasupplicant
+
 readonly WPA_SUPPLICANT=/etc/wpa_supplicant/wpa_supplicant.conf
 readonly WPA_SUPPLICANT_BOOT=/boot/wpa_supplicant.conf
 if [[ ! -f $WPA_SUPPLICANT_BOOT ]]; then
