@@ -49,6 +49,7 @@ else
     git clone git://github.com/ochafik/autopilot.git $AUTOPILOT_HOME
 fi
 
+cd $AUTOPILOT_HOME
 source $AUTOPILOT_HOME/common/common.sh
 
 source $AUTOPILOT_HOME/install/install-wpa.sh
