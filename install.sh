@@ -58,11 +58,13 @@ source $AUTOPILOT_HOME/install/install-socks.sh
 
 log_info "You can edit $CONFIG_FILE from any OS to tweak these settings."
 
+set +e
+
 OLD_CRONTAB=`crontab -l | grep -v '^$'`
 FILTERED_CRONTAB=`echo "$CRONTAB" | grep -v "autopilot" | grep -v '^$'`
-CRONTAB="*/1 * * * * $AUTOPILOT_HOME/publicize.sh
-*/1 * * * * $AUTOPILOT_HOME/autoconnect.sh
-*/1 * * * * sleep 30 && cd $AUTOPILOT_HOME && git pull
+CRONTAB="* * * * * sudo $AUTOPILOT_HOME/publicize.sh
+* * * * * sudo $AUTOPILOT_HOME/autoconnect.sh
+* * * * * sleep 30 && cd $AUTOPILOT_HOME && sudo git pull
 $FILTERED_CRONTAB"
 
 if [[ "$OLD_CRONTAB" != "$CRONTAB" ]]; then
