@@ -4,9 +4,10 @@ set -e
 
 CLIENT_IP="$1"
 
+/etc/init.d/danted stop
+
 if [[ -z "$CLIENT_IP" ]]; then
-    echo "No client ip provided, stopping danted."
-    /etc/init.d/danted stop
+    # echo "No client ip provided, stopping danted."
     exit 0
 fi
 
@@ -17,8 +18,6 @@ function start() {
 trap start EXIT
 
 echo "
-# logoutput: syslog
-
 internal: eth0 port=1080
 external: eth0
 
