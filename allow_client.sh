@@ -2,10 +2,10 @@
 
 set -e
 
-CLIENT_IP=`echo $SSH_CLIENT | awk '{ print $1}'`
+CLIENT_IP="$1"
 
 if [[ -z "$CLIENT_IP" ]]; then
-    echo "Failed to get client ip."
+    echo "Please provide a client ip."
     exit 1
 fi
 
