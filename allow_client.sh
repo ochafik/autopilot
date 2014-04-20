@@ -23,6 +23,9 @@ logoutput: syslog
 internal: eth0 port=1080
 external: eth0
 
+clientmethod: none
+method: none
+
 user.privileged: root
 user.notprivileged: nobody
 user.libwrap: nobody

@@ -18,7 +18,7 @@ case $STATE in
             echo "Please specify a host."
             exit 1
         fi
-        ssh $HOST_USER@$HOST -p $SSH_PORT 'sudo /root/autopilot/allow_current_ssh_client.sh `echo $SSH_CLIENT | awk "{ print \\$1}"`'
+        ssh $HOST_USER@$HOST -p $SSH_PORT 'sudo /root/autopilot/allow_client.sh `echo $SSH_CLIENT | awk "{ print \\$1}"`'
 
         sudo networksetup -setsocksfirewallproxy $INTERFACE $HOST $SOCKS_PORT off
         sudo networksetup -setsocksfirewallproxystate $INTERFACE on
