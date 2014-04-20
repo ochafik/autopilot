@@ -7,7 +7,6 @@ CLIENT_IP="$1"
 /etc/init.d/danted stop
 
 if [[ -z "$CLIENT_IP" ]]; then
-    # echo "No client ip provided, stopping danted."
     exit 0
 fi
 
@@ -28,12 +27,6 @@ user.privileged: root
 user.notprivileged: nobody
 user.libwrap: nobody
 
-client pass {
-  from: $CLIENT_IP/0 port 1-65535 to: 0.0.0.0/0
-  log: error
-}
-
-pass {
-  from: 0.0.0.0/0 to: 0.0.0.0/0
-  log: error
-}" > /etc/danted.conf
+client pass { from: $CLIENT_IP/0 port 1-65535 to: 0.0.0.0/0 }
+pass { from: 0.0.0.0/0 to: 0.0.0.0/0 }
+" > /etc/danted.conf
