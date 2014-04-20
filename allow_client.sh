@@ -10,6 +10,12 @@ if [[ -z "$CLIENT_IP" ]]; then
     exit 0
 fi
 
+function start() {
+  /etc/init.d/danted start
+}
+
+trap start EXIT
+
 echo "
 # logoutput: syslog
 
@@ -32,5 +38,3 @@ pass {
   from: 0.0.0.0/0 to: 0.0.0.0/0
   log: error
 }" > /etc/danted.conf
-
-/etc/init.d/danted restart

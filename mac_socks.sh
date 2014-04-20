@@ -14,9 +14,10 @@ if [[ -z "$HOST" ]]; then
 fi
 
 function cleanup() {
+    echo ""
+    echo "Disabling proxy"
     sudo networksetup -setsocksfirewallproxystate $INTERFACE off
     ssh $HOST_USER@$HOST -p $SSH_PORT 'sudo /root/autopilot/allow_client.sh ""'
-    echo "Proxy disabled."
 }
 
 trap cleanup EXIT
