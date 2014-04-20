@@ -5,20 +5,13 @@ set -e
 CLIENT_IP="$1"
 
 if [[ -z "$CLIENT_IP" ]]; then
-    echo "Please provide a client ip."
-    exit 1
+    echo "No client ip provided, stopping danted."
+    /etc/init.d/danted stop
+    exit 0
 fi
 
-/etc/init.d/danted stop
-
-function start() {
-  /etc/init.d/danted start
-}
-
-trap start EXIT
-
 echo "
-logoutput: syslog
+# logoutput: syslog
 
 internal: eth0 port=1080
 external: eth0
@@ -39,3 +32,5 @@ pass {
   from: 0.0.0.0/0 to: 0.0.0.0/0
   log: error
 }" > /etc/danted.conf
+
+/etc/init.d/danted restart
