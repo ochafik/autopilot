@@ -82,17 +82,36 @@ function openRouterPort() {
     fi
 }
 
+function updatePAC() {
+    local host=$1
+    local socks_port=$2
+
+    if [[ -d /var/www ]]; then
+        echo "function FindProxyForURL(url, host)
+    { 
+         return \"SOCKS $host:$socks_port\";
+    }" > /var/www/socks.pac
+    fi
+}
+
 EXTERNAL_SSH_PORT=${EXTERNAL_SSH_PORT:-`get_config external_ssh_port 1022`}
 openRouterPort "SSH" "$LOCAL_IP" 22 $EXTERNAL_SSH_PORT TCP
 
-EXTERNAL_SOCKS_PORT=${EXTERNAL_VPN_PORT:-`get_config external_socks_port 8080`}
+EXTERNAL_SOCKS_PORT=${EXTERNAL_SOCKS_PORT:-`get_config external_socks_port 8080`}
 openRouterPort "SOCKS" "$LOCAL_IP" 1080 $EXTERNAL_SOCKS_PORT TCP
+
+if [[ -d /var/www ]]; then
+    EXTERNAL_HTTP_PORT=${EXTERNAL_HTTP_PORT:-`get_config external_http_port 80`}
+    openRouterPort "HTTP" "$LOCAL_IP" 80 $EXTERNAL_HTTP_PORT TCP
+fi
+
 
 NOIP_USER=${NOIP_USER:-`get_config noip_user`}
 NOIP_PASSWORD=${NOIP_PASSWORD:-`get_config noip_password`}
 NOIP_HOST=${NOIP_HOST:-`get_config noip_host`}
 
 updateDynamicDNS "$NOIP_USER" "$NOIP_PASSWORD" "$NOIP_HOST" "$EXTERNAL_IP"
+updatePAC "$NOIP_HOST" "$EXTERNAL_SOCKS_PORT"
 
 log_info "You can now connect with:
 ssh -X pi@$NOIP_HOST -p $EXTERNAL_SSH_PORT"
