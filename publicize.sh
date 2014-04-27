@@ -87,10 +87,24 @@ function updatePAC() {
     local socks_port=$2
 
     if [[ -d /var/www ]]; then
-        echo "function FindProxyForURL(url, host)
-    { 
-         return \"SOCKS $host:$socks_port\";
-    }" > /var/www/socks.pac
+        echo "
+          function FindProxyForURL(url, host)
+          { 
+               return \"SOCKS $host:$socks_port; DIRECT\";
+          }
+        " > /var/www/socks.pac
+
+        echo "
+          function FindProxyForURL(url, host) {
+            if (/* Arte, M6  */ dnsDomainIs(host, '.cedexis.com') ||
+                                dnsDomainIs(host, '.cedexis-radar.net') ||
+                /* France TV */ host == 'geo.francetv.fr' ||
+                /* TF1       */ host == 's.what.tv') {
+              return 'SOCKS opentator.no-ip.org:8080; DIRECT';
+            }
+            return 'DIRECT';
+          }
+        " > /var/www/tv.pac
     fi
 }
 

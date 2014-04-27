@@ -17,12 +17,12 @@ function cleanup() {
     echo ""
     echo "Disabling proxy"
     sudo networksetup -setsocksfirewallproxystate $INTERFACE off
-    ssh $HOST_USER@$HOST -p $SSH_PORT 'sudo /root/autopilot/allow_client.sh ""'
+    # ssh $HOST_USER@$HOST -p $SSH_PORT 'sudo /root/autopilot/allow_client.sh ""'
 }
 
 trap cleanup EXIT
 
-ssh $HOST_USER@$HOST -p $SSH_PORT 'sudo /root/autopilot/allow_client.sh `echo $SSH_CLIENT | awk "{ print \\$1}"`'
+# ssh $HOST_USER@$HOST -p $SSH_PORT 'sudo /root/autopilot/allow_client.sh `echo $SSH_CLIENT | awk "{ print \\$1}"`'
 
 sudo networksetup -setsocksfirewallproxy $INTERFACE $HOST $SOCKS_PORT off
 sudo networksetup -setsocksfirewallproxystate $INTERFACE on
