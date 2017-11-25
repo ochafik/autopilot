@@ -27,12 +27,17 @@ sudo apt-get clean
 
 # Update
 sudo apt-get update -y && sudo apt-get dist-upgrade -y && sudo apt-get --purge autoremove -y
-sudo apt-get install -y vim nodejs
+sudo apt-get install -y vim
 sudo apt-get --purge autoremove -y
 
 # Setup auto-updates upgrades
 sudo apt-get install unattended-upgrades
 # vi /etc/apt/apt.conf.d/50unattended-upgrades
+
+# Node.js
+sudo apt-get install -y npm
+sudo npm i -g n
+sudo n latest
 ```
 
 Edit `/boot/config.txt`:
