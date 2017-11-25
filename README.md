@@ -27,7 +27,8 @@ sudo apt-get clean
 
 # Update
 sudo apt-get update -y && sudo apt-get dist-upgrade -y && sudo apt-get --purge autoremove -y
-sudo apt-get install vim
+sudo apt-get install -y vim node
+sudo apt-get --purge autoremove -y
 
 # Setup auto-updates upgrades
 sudo apt-get install unattended-upgrades
