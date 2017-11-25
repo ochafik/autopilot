@@ -33,11 +33,6 @@ sudo apt-get --purge autoremove -y
 # Setup auto-updates upgrades
 sudo apt-get install unattended-upgrades
 # vi /etc/apt/apt.conf.d/50unattended-upgrades
-
-# Node.js
-sudo apt-get install -y npm
-sudo npm i -g n
-sudo n latest
 ```
 
 Edit `/boot/config.txt`:
@@ -56,4 +51,13 @@ dtparam=act_led_activelow=on
 ## Disable the PWR LED on the Pi 1/2/3.
 #dtparam=pwr_led_trigger=none
 #dtparam=pwr_led_activelow=off
+```
+
+## Install node.js
+
+```bash
+sudo apt-get install -y npm
+sudo npm i -g n
+sudo n latest
+echo 'PATH=${PATH}:/usr/local/bin' >> ~/.profile 
 ```
