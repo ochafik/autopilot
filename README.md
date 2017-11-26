@@ -17,7 +17,7 @@ Flash image on mac with:
 ```bash
 dpkg-query -Wf '${Installed-Size}\t${Package}\t${Priority}\n' | egrep '\s(optional|extra)' | cut -f 1,2 | sort -nr | less
 
-sudo apt-get --purge remove -y scratch nuscratch minecraft-pi sonic-pi dillo gpicview openjdk-7-jre oracle-java7-jdk libreoffice* wolfram-engine
+sudo apt-get --purge remove -y idle3 smartsim scratch nuscratch minecraft-pi python-minecraftpi python3-minecraftpi sonic-pi dillo gpicview openjdk-7-jre oracle-java7-jdk libreoffice* wolfram-engine
 
 # Drop X11
 sudo apt-get --purge remove -y "x11-*" libxtst6 desktop-base xkb-data
