@@ -55,8 +55,22 @@ dtparam=act_led_activelow=on
 
 ## Setup pubkey auth for ssh
 
+See [Securing your Raspberry Pi](https://www.raspberrypi.org/documentation/configuration/security.md)
+
 ```bash
 cat ~/.ssh/id_rsa.pub | ssh pi@raspberrypi.local -C "install -d -m 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 0600 ~/.ssh/authorized_keys"
+```
+
+And setup a firewall:
+```bash
+sudo apt-get install ufw
+sudo ufw allow ssh
+sudo ufw enable
+
+sudo apt-get install fail2ban
+sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+# Edit maxretry & bantime = -1
+# sudo vi /etc/fail2ban/jail.local
 ```
 
 ## Install node.js
