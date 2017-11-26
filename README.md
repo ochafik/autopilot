@@ -56,7 +56,7 @@ dtparam=act_led_activelow=on
 ## Setup pubkey auth for ssh
 
 ```bash
-cat ~/.sshd/id_rsa.pub | ssh pi@raspberrypi.local -C "mkdir ~/.ssh && chmod 700 ~/.sshd && cat >> ~/.ssh/authorized_keys && chmod 0600 ~/.sshd/authorized_keys"
+cat ~/.ssh/id_rsa.pub | ssh pi@raspberrypi.local -C "install -d -m 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 0600 ~/.ssh/authorized_keys"
 ```
 
 ## Install node.js
