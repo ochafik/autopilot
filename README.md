@@ -53,13 +53,17 @@ dtparam=act_led_activelow=on
 
 See [Securing your Raspberry Pi](https://www.raspberrypi.org/documentation/configuration/security.md)
 
+On your desktop:
+```bash
+# Setup pubkey auth for ssh:
+cat ~/.ssh/id_rsa.pub | ssh pi@raspberrypi.local -C "install -d -m 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 0600 ~/.ssh/authorized_keys"
+```
+
+On the Pi:
 ```bash
 # Setup unattended upgrades:
 sudo apt-get install unattended-upgrades
 echo 'Unattended-Upgrade::Automatic-Reboot "true";' | sudo tee -a /etc/apt/apt.conf.d/50unattended-upgrades
-
-# Setup pubkey auth for ssh:
-cat ~/.ssh/id_rsa.pub | ssh pi@raspberrypi.local -C "install -d -m 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 0600 ~/.ssh/authorized_keys"
 
 # Setup a firewall:
 sudo apt-get install ufw
