@@ -53,26 +53,20 @@ dtparam=act_led_activelow=on
 
 See [Securing your Raspberry Pi](https://www.raspberrypi.org/documentation/configuration/security.md)
 
-Setup unattended upgrades:
 ```bash
+# Setup unattended upgrades:
 sudo apt-get install unattended-upgrades
-# vi /etc/apt/apt.conf.d/50unattended-upgrades
-```
+echo 'Unattended-Upgrade::Automatic-Reboot "true";' | sudo tee -a /etc/apt/apt.conf.d/50unattended-upgrades
 
-Setup pubkey auth for ssh:
-```bash
+# Setup pubkey auth for ssh:
 cat ~/.ssh/id_rsa.pub | ssh pi@raspberrypi.local -C "install -d -m 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 0600 ~/.ssh/authorized_keys"
-```
 
-Setup a firewall:
-```bash
+# Setup a firewall:
 sudo apt-get install ufw
 sudo ufw allow ssh
 yes | sudo ufw enable
-```
 
-Setup IP banning for serial offenders:
-```bash
+# Setup IP banning for serial offenders:
 sudo apt-get install fail2ban
 cat /etc/fail2ban/jail.conf | \
   sed -E 's/^(maxretry *=).*/\1 3/g' | \
