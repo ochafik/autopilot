@@ -29,10 +29,6 @@ sudo apt-get clean
 sudo apt-get update -y && sudo apt-get dist-upgrade -y && sudo apt-get --purge autoremove -y
 sudo apt-get install -y vim
 sudo apt-get --purge autoremove -y
-
-# Setup auto-updates upgrades
-sudo apt-get install unattended-upgrades
-# vi /etc/apt/apt.conf.d/50unattended-upgrades
 ```
 
 Edit `/boot/config.txt`:
@@ -53,24 +49,35 @@ dtparam=act_led_activelow=on
 #dtparam=pwr_led_activelow=off
 ```
 
-## Setup pubkey auth for ssh
+## Security
 
 See [Securing your Raspberry Pi](https://www.raspberrypi.org/documentation/configuration/security.md)
 
+Setup unattended upgrades:
+```bash
+sudo apt-get install unattended-upgrades
+# vi /etc/apt/apt.conf.d/50unattended-upgrades
+```
+
+Setup pubkey auth for ssh:
 ```bash
 cat ~/.ssh/id_rsa.pub | ssh pi@raspberrypi.local -C "install -d -m 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 0600 ~/.ssh/authorized_keys"
 ```
 
-And setup a firewall:
+Setup a firewall:
 ```bash
 sudo apt-get install ufw
 sudo ufw allow ssh
-sudo ufw enable
+yes | sudo ufw enable
+```
 
+Setup IP banning for serial offenders:
+```bash
 sudo apt-get install fail2ban
-sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
-# Edit maxretry & bantime = -1
-# sudo vi /etc/fail2ban/jail.local
+cat /etc/fail2ban/jail.conf | \
+  sed -E 's/^(maxretry *=).*/\1 3/g' | \
+  sed -E 's/^(bantime *=).*/\1 -1/g' | \
+  sudo tee /etc/fail2ban/jail.local
 ```
 
 ## Install node.js
