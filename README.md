@@ -53,6 +53,12 @@ dtparam=act_led_activelow=on
 
 See [Securing your Raspberry Pi](https://www.raspberrypi.org/documentation/configuration/security.md)
 
+On the Pi:
+- change your password, 
+- `sudo apt-get update && sudo apt-get upgrade`
+- change the hostname,
+- enable SSH
+
 On your desktop:
 ```bash
 # Setup pubkey auth for ssh:
