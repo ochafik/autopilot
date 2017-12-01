@@ -55,7 +55,7 @@ See [Securing your Raspberry Pi](https://www.raspberrypi.org/documentation/confi
 
 On the Pi:
 - change your password, 
-- `sudo apt-get update && sudo apt-get upgrade`
+- `sudo apt-get update && sudo apt-get upgrade && sudo apt-get install screen vim`
 - change the hostname,
 - enable SSH
 
