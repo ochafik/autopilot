@@ -96,13 +96,11 @@ echo 'PATH=${PATH}:/usr/local/bin' >> ~/.profile
 ## Install Tensorflow
 
 ```
-sudo apt install libatlas-base-dev
-pip install tensorflow==2.0.0-alpha0
+sudo apt-get install -y libatlas-base-dev libhdf5-dev
+pip install tensorflow
 
 docker pull tensorflow/tensorflow
 docker run -it -p 8888:8888 tensorflow/tensorflow
-
-#pip3 install tensorflow
 ```
 
 ## Install docker
@@ -111,27 +109,6 @@ Method 1 [source](https://www.freecodecamp.org/news/the-easy-way-to-set-up-docke
 ```
 curl -sSL https://get.docker.com | sh
 sudo usermod -aG docker pi
-
-#sudo groupadd docker
-#sudo gpasswd -a $USER docker
-#newgrp docker
-```
-
-Method 2:
-```
-sudo apt-get install apt-transport-https \
-                       ca-certificates \
-                       software-properties-common
-curl -fsSL https://yum.dockerproject.org/gpg | sudo apt-key add -
-apt-key fingerprint 58118E89F3A912897C070ADBF76221572C52609D
-
-sudo add-apt-repository \
-       "deb https://apt.dockerproject.org/repo/ \
-       raspbian-$(lsb_release -cs) \
-       main"
-
-sudo apt-get update
-sudo apt-get -y install docker-engine
 ```
 
 ## Install VS Code
