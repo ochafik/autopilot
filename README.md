@@ -99,6 +99,7 @@ echo 'PATH=${PATH}:/usr/local/bin' >> ~/.profile
 sudo apt-get install -y libatlas-base-dev libhdf5-dev
 pip install tensorflow
 
+# Note: this runs it as an x86_64 image, which doesn't make any sense from a performance standpoint.
 docker pull tensorflow/tensorflow
 docker run -it -p 8888:8888 tensorflow/tensorflow
 ```
@@ -109,6 +110,14 @@ Method 1 [source](https://www.freecodecamp.org/news/the-easy-way-to-set-up-docke
 ```
 curl -sSL https://get.docker.com | sh
 sudo usermod -aG docker pi
+```
+
+## Install QEMU-x86 to run x86_64 docker images
+
+```
+sudo apt-get install -y --no-install-recommends qemu-system-x86 qemu-user-static binfmt-support
+sudo update-binfmts --enable qemu-x86_64
+sudo update-binfmts --display qemu-x86_64
 ```
 
 ## Install VS Code
