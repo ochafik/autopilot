@@ -133,3 +133,11 @@ sudo add-apt-repository \
 sudo apt-get update
 sudo apt-get -y install docker-engine
 ```
+
+## Install VS Code
+
+```
+wget https://code.headmelted.com/installers/apt.sh
+# Inspect script
+./apt.sh
+```
