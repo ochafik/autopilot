@@ -86,6 +86,15 @@ cat /etc/fail2ban/jail.conf | \
 
 ## Install node.js
 
+Using [fnm](https://github.com/Schniz/fnm):
+```
+curl -fsSL https://fnm.vercel.app/install | bash
+source /home/ochafik/.bashrc
+fnm install --latest
+node --version 
+```
+
+Alternative (slow)
 ```bash
 sudo apt-get install -y npm
 sudo npm i -g n
