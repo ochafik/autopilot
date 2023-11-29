@@ -106,7 +106,12 @@ docker run -it -p 8888:8888 tensorflow/tensorflow
 
 ## Install docker
 
-Method 1 [source](https://www.freecodecamp.org/news/the-easy-way-to-set-up-docker-on-a-raspberry-pi-7d24ced073ef/):
+Method 1:
+```
+sudo apt-get install docker.io
+```
+
+Method 2 [source](https://www.freecodecamp.org/news/the-easy-way-to-set-up-docker-on-a-raspberry-pi-7d24ced073ef/):
 ```
 curl -sSL https://get.docker.com | sh
 sudo usermod -aG docker pi
@@ -122,6 +127,11 @@ sudo update-binfmts --display qemu-x86_64
 
 ## Install VS Code
 
+```
+sudo apt-get install code
+```
+
+Alternative method
 ```
 wget https://code.headmelted.com/installers/apt.sh
 # Inspect script
